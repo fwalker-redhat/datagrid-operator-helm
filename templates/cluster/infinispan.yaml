@@ -1,0 +1,16 @@
+---
+{{- /*
+This template will create a single Red Hat Data Grid cluster using the
+`Infinispan` custom resource.
+*/}}
+{{- if .Values.infinispan.enabled -}}
+apiVersion: infinispan.org/v1
+kind: Infinispan
+metadata:
+  name: {{ .Values.infinispan.name }}
+spec:
+  replicas: {{ .Values.infinispan.replicas }}
+  version: {{ .Values.infinispan.version }}
+  service:
+    type: DataGrid
+{{- end -}}
