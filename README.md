@@ -8,15 +8,17 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| infinispan | object | `{"credentialsStore":{"enabled":false,"secretName":null},"customConfig":{"config":null,"enabled":false},"enabled":true,"name":"datagrid","replicas":1,"version":"8.5.3-1"}` | Settings related to the Red Hat Data Grid Operator Cluster |
+| infinispan | object | See child keys | Settings related to the Red Hat Data Grid Operator Cluster |
 | infinispan.credentialsStore.enabled | boolean | `false` | Use a `Secret` to store sensitive information such as credentials |
+| infinispan.credentialsStore.secretName | string | `nil` | The name of the `Secret` used to store sensitive information |
+| infinispan.customConfig.config | object | `nil` | The custom Red Hat Data Grid configuration |
 | infinispan.customConfig.enabled | boolean | `false` | Create a `ConfigMap` with a custom Red Hat Data Grid configuration |
 | infinispan.enabled | boolean | `true` | Create a `Subscription` for the Red Hat Data Grid Operator |
-| operator | object | `{"channel":"stable","enabled":false,"installNamespace":"openshift-operators","managedNamespaces":[],"singleInstance":true,"startingCSV":null,"updateApproval":"Manual"}` | Settings related to the Red Hat Data Grid Operator Subscription |
+| operator | object | See child keys | Settings related to the Red Hat Data Grid Operator `Subscription` |
 | operator.channel | string | `"stable"` | The `channel` of the Operator |
 | operator.enabled | boolean | `false` | Create a `Subscription` for the Red Hat Data Grid Operator |
-| operator.installNamespace | string | `"openshift-operators"` | The namespace the Operator will be deployed in |
-| operator.managedNamespaces | list | `[]` | When singleInstance is marked as false, this instance of the Operator  will manage these namespaces |
+| operator.installNamespace | string | `"openshift-operators"` | The `Namespace` the Operator will be deployed in |
+| operator.managedNamespaces | list | `[]` | When `operator.singleInstance` is marked as false, this instance of the  Operator will manage these namespaces |
 | operator.singleInstance | boolean | `true` | Use a single operator instance to manage all Red Hat Data Grid  instances |
 | operator.startingCSV | string | `nil` | The minimum `ClusterServiceVersion` for the operator |
 | operator.updateApproval | string | `"Manual"` | Set the `Subscription` update approval mode. `Manual` will require install plans to be approved before upgrades will take place (recommended  for Production installations) while `Automatic` will be applied as and when they become available |

@@ -1,6 +1,7 @@
 # Default values for datagrid-config.
 
-# -- Settings related to the Red Hat Data Grid Operator Subscription
+# -- Settings related to the Red Hat Data Grid Operator `Subscription`
+# @default -- See child keys
 operator:
   # -- (boolean) Create a `Subscription` for the Red Hat Data Grid Operator
   enabled: false
@@ -16,13 +17,14 @@ operator:
   # for Production installations) while `Automatic` will be applied as and when
   # they become available
   updateApproval: Manual
-  # -- The namespace the Operator will be deployed in
+  # -- The `Namespace` the Operator will be deployed in
   installNamespace: openshift-operators
-  # -- When singleInstance is marked as false, this instance of the Operator 
-  # will manage these namespaces
+  # -- When `operator.singleInstance` is marked as false, this instance of the 
+  # Operator will manage these namespaces
   managedNamespaces: []
 
 # -- Settings related to the Red Hat Data Grid Operator Cluster
+# @default -- See child keys
 infinispan:
   # -- (boolean) Create a `Subscription` for the Red Hat Data Grid Operator
   enabled: true
@@ -33,9 +35,11 @@ infinispan:
     # -- (boolean) Create a `ConfigMap` with a custom Red Hat Data Grid
     # configuration
     enabled: false
+    # -- (object) The custom Red Hat Data Grid configuration
     config:
   credentialsStore:
     # -- (boolean) Use a `Secret` to store sensitive information such as
     # credentials
     enabled: false
+    # -- (string) The name of the `Secret` used to store sensitive information
     secretName:
