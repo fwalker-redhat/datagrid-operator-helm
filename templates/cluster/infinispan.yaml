@@ -8,6 +8,10 @@ apiVersion: infinispan.org/v1
 kind: Infinispan
 metadata:
   name: {{ .Values.infinispan.name }}
+  {{- if .Values.infinispan.monitoring.disablePrometheus }}
+  annotations:
+    infinispan.org/monitoring: 'false'
+  {{- end }}
 spec:
   replicas: {{ .Values.infinispan.replicas }}
   version: {{ .Values.infinispan.version }}
@@ -30,5 +34,9 @@ spec:
     nodePort: {{ .Values.infinispan.expose.port }}
   {{- else if eq "LoadBalancer" .Values.infinispan.expose.type }}
     port: {{ default 11222 .Values.infinispan.expose.port }}
+  {{- end }}
+  {{-if .Values.infinispan.monitoring.enableJMX }}
+  jmx:
+    enabled: true
   {{- end }}
 {{- end -}}

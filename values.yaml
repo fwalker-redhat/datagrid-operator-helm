@@ -71,3 +71,9 @@ infinispan:
   # need declarative Kubernetes representations of Data Grid resources created
   # through the Data Grid Console, CLI, or client applications.   
   disableConfigListener: false
+  # -- Control monitoring configurations for Red Hat Data Grid
+  # @default -- See child keys
+  monitoring:
+    # -- Enable JMX remote ports. This is not needed for prometheus endpoints.
+    enableJMX: false
+    disablePrometheus: false

@@ -20,6 +20,8 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | infinispan.expose | object | See child keys | Used to expose Red Hat Data Grid for external connections |
 | infinispan.expose.hostname | string | `nil` | A specific hostname used to expose Red Hat Data Grid when  `expose.type` is set to `Route` |
 | infinispan.expose.port | string | Defaults to `11222` when `expose.type` is set to `LoadBalancer` | The port number used to expose Red Hat Data Grid when `export.type` is set to `NodePort` or `LoadBalancer` |
+| infinispan.monitoring | object | See child keys | Control monitoring configurations for Red Hat Data Grid |
+| infinispan.monitoring.enableJMX | bool | `false` | Enable JMX remote ports. This is not needed for prometheus endpoints. |
 | infinispan.name | string | `"datagrid"` | The name of the Red Hat Data Grid cluster |
 | infinispan.replicas | int | `1` | The number of nodes that will form part of the Red Hat Data Grid cluster |
 | infinispan.upgradeType | string | `"Shutdown"` | Used to control the behavior of Red Hat Data Grid version upgrades. Not to be confused with the Red Hat Data Grid Operator version. |
