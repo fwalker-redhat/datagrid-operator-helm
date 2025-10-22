@@ -28,18 +28,46 @@ operator:
 infinispan:
   # -- (boolean) Create a `Subscription` for the Red Hat Data Grid Operator
   enabled: true
+  # -- The Red Hat Data Grid version to install.  Not to be confused with the
+  # Red Hat Data Grid Operator version.
   version: 8.5.3-1
+  # -- The number of nodes that will form part of the Red Hat Data Grid cluster
   replicas: 1
+  # -- The name of the Red Hat Data Grid cluster
   name: datagrid
+  # -- Settings related to the Red Hat Data Grid Operator Cluster
+  # @default -- See child keys
   customConfig:
     # -- (boolean) Create a `ConfigMap` with a custom Red Hat Data Grid
     # configuration
     enabled: false
     # -- (object) The custom Red Hat Data Grid configuration
     config:
+  # -- Configuration of a secret used to store sensitive information
+  # @default -- See child keys
   credentialsStore:
     # -- (boolean) Use a `Secret` to store sensitive information such as
     # credentials
     enabled: false
     # -- (string) The name of the `Secret` used to store sensitive information
     secretName:
+  # -- Used to control the behavior of Red Hat Data Grid version upgrades. Not
+  # to be confused with the Red Hat Data Grid Operator version.
+  upgradeType: Shutdown
+  # -- Used to expose Red Hat Data Grid for external connections
+  # @default -- See child keys
+  expose:
+    # The type of service or route used to expose Red Hat Data Grid. Can be one
+    # of `Route`, `NodePort` or `LoadBalancer`
+    type: Route
+    # -- (string) A specific hostname used to expose Red Hat Data Grid when 
+    # `expose.type` is set to `Route`
+    hostname:
+    # -- The port number used to expose Red Hat Data Grid when `export.type`
+    # is set to `NodePort` or `LoadBalancer`
+    # @default -- Defaults to `11222` when `expose.type` is set to `LoadBalancer`
+    port:
+  # -- Disable the config listener pod. You should do this only if you do not 
+  # need declarative Kubernetes representations of Data Grid resources created
+  # through the Data Grid Console, CLI, or client applications.   
+  disableConfigListener: false

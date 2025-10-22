@@ -13,4 +13,22 @@ spec:
   version: {{ .Values.infinispan.version }}
   service:
     type: DataGrid
+  {{- if .Values.infinispan.customConfig.enabled }}
+  configMapName: {{ .Release.Name }}-datagrid-custom-config
+  {{- end }}
+  upgrades:
+    type: {{ .Values.infinispan.upgradeType }}
+  {{- if .Values.infinispan.disableConfigListener }}
+  configListener:
+    enabled: false
+  {{- end }}
+  expose:
+    type: {{ .Values.infinispan.expose.type }}
+  {{- if eq "Route" .Values.infinispan.expose.type }}
+    host: {{ .Values.infinispan.expose.hostname }}
+  {{- else if and (eq "NodePort" .Values.infinispan.expose.type) }}
+    nodePort: {{ .Values.infinispan.expose.port }}
+  {{- else if eq "LoadBalancer" .Values.infinispan.expose.type }}
+    port: {{ default 11222 .Values.infinispan.expose.port }}
+  {{- end }}
 {{- end -}}
