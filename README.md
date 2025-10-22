@@ -8,24 +8,27 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| authentication | object | See child keys | Control authentication configurations for Red Hat Data Grid |
+| credentialsStore | object | See child keys | Configuration of a secret used to store sensitive information |
+| credentialsStore.enabled | boolean | `false` | Use a `Secret` to store sensitive information such as credentials |
+| credentialsStore.secretName | string | `nil` | The name of the `Secret` used to store sensitive information |
+| customConfig | object | See child keys | Settings related to the Red Hat Data Grid Operator Cluster |
+| customConfig.config | object | `nil` | The custom Red Hat Data Grid configuration |
+| customConfig.enabled | boolean | `false` | Create a `ConfigMap` with a custom Red Hat Data Grid configuration |
+| encryption | object | See child keys | Control encryption configurations for Red Hat Data Grid |
+| expose | object | See child keys | Used to expose Red Hat Data Grid for external connections |
+| expose.hostname | string | `nil` | A specific hostname used to expose Red Hat Data Grid when  `expose.type` is set to `Route` |
+| expose.port | string | Defaults to `11222` when `expose.type` is set to `LoadBalancer` | The port number used to expose Red Hat Data Grid when `export.type` is set to `NodePort` or `LoadBalancer` |
 | infinispan | object | See child keys | Settings related to the Red Hat Data Grid Operator Cluster |
-| infinispan.credentialsStore | object | See child keys | Configuration of a secret used to store sensitive information |
-| infinispan.credentialsStore.enabled | boolean | `false` | Use a `Secret` to store sensitive information such as credentials |
-| infinispan.credentialsStore.secretName | string | `nil` | The name of the `Secret` used to store sensitive information |
-| infinispan.customConfig | object | See child keys | Settings related to the Red Hat Data Grid Operator Cluster |
-| infinispan.customConfig.config | object | `nil` | The custom Red Hat Data Grid configuration |
-| infinispan.customConfig.enabled | boolean | `false` | Create a `ConfigMap` with a custom Red Hat Data Grid configuration |
 | infinispan.disableConfigListener | bool | `false` | Disable the config listener pod. You should do this only if you do not  need declarative Kubernetes representations of Data Grid resources created through the Data Grid Console, CLI, or client applications.    |
 | infinispan.enabled | boolean | `true` | Create a `Subscription` for the Red Hat Data Grid Operator |
-| infinispan.expose | object | See child keys | Used to expose Red Hat Data Grid for external connections |
-| infinispan.expose.hostname | string | `nil` | A specific hostname used to expose Red Hat Data Grid when  `expose.type` is set to `Route` |
-| infinispan.expose.port | string | Defaults to `11222` when `expose.type` is set to `LoadBalancer` | The port number used to expose Red Hat Data Grid when `export.type` is set to `NodePort` or `LoadBalancer` |
-| infinispan.monitoring | object | See child keys | Control monitoring configurations for Red Hat Data Grid |
-| infinispan.monitoring.enableJMX | bool | `false` | Enable JMX remote ports. This is not needed for prometheus endpoints. |
 | infinispan.name | string | `"datagrid"` | The name of the Red Hat Data Grid cluster |
 | infinispan.replicas | int | `1` | The number of nodes that will form part of the Red Hat Data Grid cluster |
 | infinispan.upgradeType | string | `"Shutdown"` | Used to control the behavior of Red Hat Data Grid version upgrades. Not to be confused with the Red Hat Data Grid Operator version. |
 | infinispan.version | string | `"8.5.3-1"` | The Red Hat Data Grid version to install.  Not to be confused with the Red Hat Data Grid Operator version. |
+| monitoring | object | See child keys | Control monitoring configurations for Red Hat Data Grid |
+| monitoring.disablePrometheus | bool | `false` | Disable the default prometheus service monitor |
+| monitoring.enableJMX | bool | `false` | Enable JMX remote ports. This is not needed for prometheus endpoints. |
 | operator | object | See child keys | Settings related to the Red Hat Data Grid Operator `Subscription` |
 | operator.channel | string | `"stable"` | The `channel` of the Operator |
 | operator.enabled | boolean | `false` | Create a `Subscription` for the Red Hat Data Grid Operator |
@@ -34,6 +37,7 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | operator.singleInstance | boolean | `true` | Use a single operator instance to manage all Red Hat Data Grid  instances |
 | operator.startingCSV | string | `nil` | The minimum `ClusterServiceVersion` for the operator |
 | operator.updateApproval | string | `"Manual"` | Set the `Subscription` update approval mode. `Manual` will require install plans to be approved before upgrades will take place (recommended  for Production installations) while `Automatic` will be applied as and when they become available |
+| resources | object | See child keys | Control resource configurations for Red Hat Data Grid |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

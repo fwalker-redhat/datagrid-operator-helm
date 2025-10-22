@@ -8,7 +8,7 @@ apiVersion: infinispan.org/v1
 kind: Infinispan
 metadata:
   name: {{ .Values.infinispan.name }}
-  {{- if .Values.infinispan.monitoring.disablePrometheus }}
+  {{- if .Values.monitoring.disablePrometheus }}
   annotations:
     infinispan.org/monitoring: 'false'
   {{- end }}
@@ -17,7 +17,7 @@ spec:
   version: {{ .Values.infinispan.version }}
   service:
     type: DataGrid
-  {{- if .Values.infinispan.customConfig.enabled }}
+  {{- if .Values.customConfig.enabled }}
   configMapName: {{ .Release.Name }}-datagrid-custom-config
   {{- end }}
   upgrades:
@@ -27,16 +27,26 @@ spec:
     enabled: false
   {{- end }}
   expose:
-    type: {{ .Values.infinispan.expose.type }}
-  {{- if eq "Route" .Values.infinispan.expose.type }}
-    host: {{ .Values.infinispan.expose.hostname }}
-  {{- else if and (eq "NodePort" .Values.infinispan.expose.type) }}
-    nodePort: {{ .Values.infinispan.expose.port }}
-  {{- else if eq "LoadBalancer" .Values.infinispan.expose.type }}
-    port: {{ default 11222 .Values.infinispan.expose.port }}
+    type: {{ .Values.expose.type }}
+  {{- if eq "Route" .Values.expose.type }}
+    host: {{ .Values.expose.hostname }}
+  {{- else if and (eq "NodePort" .Values.expose.type) }}
+    nodePort: {{ .Values.expose.port }}
+  {{- else if eq "LoadBalancer" .Values.expose.type }}
+    port: {{ default 11222 .Values.expose.port }}
   {{- end }}
-  {{-if .Values.infinispan.monitoring.enableJMX }}
+  {{- if .Values.monitoring.enableJMX }}
   jmx:
     enabled: true
+  {{- end }}
+  {{- with .Values.resources }}
+  container:
+    memory: {{ .limits.memory }}:{{ .requests.memory }}
+    cpu: {{ .limits.cpu }}:{{ .requests.cpu }}
+  {{- end }}
+  security:
+    endpointAuthentication: {{ not .Values.authentication.disable }}
+  {{- if .Values.authentication.credentialsSecretName }}
+    endpointSecretName: {{ .Values.authentication.credentialsSecretName }}
   {{- end }}
 {{- end -}}
