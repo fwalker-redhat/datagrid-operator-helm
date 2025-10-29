@@ -44,6 +44,14 @@ spec:
     memory: {{ .limits.memory }}:{{ .requests.memory }}
     cpu: {{ .limits.cpu }}:{{ .requests.cpu }}
   {{- end }}
+  {{- with .Values.storage }}
+    storage: {{ .size }}
+    {{- if .ephemeral }}
+    ephemeralStorage: true
+    {{- else if and .storageClassName (not .ephemeral)  }}
+    storageClassName: {{ .storageClassName }}
+    {{- end }}
+  {{- end }}
   service:
     container:
   {{- with .Values.probes.readinessProbe }}

@@ -204,6 +204,14 @@ autoscaling:
 # for preserving cluster state during shutdown and for passivated cache entries.
 # @default -- See child keys
 storage:
+  # -- (string) Specifies the amount of storage for Data Grid service pods.
+  size: 1Gi
+  # -- (bool) Defines whether storage is ephemeral or permanent.
+  ephemeral: false
+  # -- (string) Specifies the name of a StorageClass object to use for the
+  # persistent volume claim (PVC). If left blank the persistent volume claim
+  # uses the default storage class.
+  storageClassName:
 
 # -- Cache configuration for caches
 # @default -- See child keys
