@@ -18,7 +18,11 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | autoscaling.maxReplicas | int | `3` | Maximum amount of pods. |
 | autoscaling.memoryAverageUtilization | int | `nil` | Memory percentage utilization that triggers a scaling operation. |
 | autoscaling.minReplicas | int | `1` | Minimum amount of pods. |
-| availability | string | See child keys | Control high availability for Red Hat Data Grid. |
+| availability | object | See child keys | Control high availability for Red Hat Data Grid. |
+| availability.antiAffinitityType | string | `"preferred"` | One of `preferred`, for `preferredDuringSchedulingIgnoredDuringExecution`, or `required`, for `requiredDuringSchedulingIgnoredDuringExecution`, modes. |
+| availability.enabled | bool | `true` | Enable high availability using anti-affinity. |
+| availability.hostname | bool | `true` | Use `kubernetes.io/hostname` `topologyKey` |
+| availability.zone | bool | `false` | Use `topology.kubernetes.io/zone` `topologyKey` |
 | caches | string | See child keys | Cache configuration for caches |
 | credentialsStore | object | See child keys | Configuration of a `Secret` used to store sensitive information |
 | credentialsStore.enabled | boolean | `false` | Use a `Secret` to store sensitive information such as credentials |

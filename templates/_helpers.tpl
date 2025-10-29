@@ -60,3 +60,30 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Label selector
+*/}}
+{{- define "label-selector" -}}
+labelSelector:
+  matchLabels:
+    app: infinispan-pod
+    clusterName: {{ .Values.infinispan.name }}
+    infinispan_cr: {{ .Values.infinispan.name }}
+{{- end -}}
+
+{{/*
+Label selector for `kubernetes.io/hostname`
+*/}}
+{{- define "label-selector.hostname" }}
+{{- include "label-selector" . }}
+topologyKey: "kubernetes.io/hostname"
+{{- end }}
+
+{{/*
+Label selector for `topology.kubernetes.io/zone`
+*/}}
+{{- define "label-selector.zone" }}
+{{- include "label-selector" . }}
+topologyKey: "topology.kubernetes.io/zone"
+{{- end }}

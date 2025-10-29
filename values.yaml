@@ -193,6 +193,15 @@ authorization:
 # -- Control high availability for Red Hat Data Grid.
 # @default -- See child keys
 availability:
+  # -- Enable high availability using anti-affinity.
+  enabled: true
+  # -- One of `preferred`, for `preferredDuringSchedulingIgnoredDuringExecution`,
+  # or `required`, for `requiredDuringSchedulingIgnoredDuringExecution`, modes.
+  antiAffinitityType: preferred
+  # -- Use `kubernetes.io/hostname` `topologyKey`
+  hostname: true
+  # -- Use `topology.kubernetes.io/zone` `topologyKey`
+  zone: false
 
 # -- Control autoscaling for Red Hat Data Grid. This should be disabled during
 # upgrade procedures as it will interfere with the upgrade process.

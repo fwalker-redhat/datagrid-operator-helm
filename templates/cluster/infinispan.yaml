@@ -21,42 +21,6 @@ spec:
   version: {{ .Values.infinispan.version }}
   service:
     type: DataGrid
-  {{- if .Values.customConfig.enabled }}
-  configMapName: {{ .Release.Name }}-datagrid-custom-config
-  {{- end }}
-  upgrades:
-    type: {{ .Values.infinispan.upgradeType }}
-  {{- if .Values.infinispan.disableConfigListener }}
-  configListener:
-    enabled: false
-  {{- end }}
-  expose:
-    type: {{ .Values.expose.type }}
-  {{- if eq "Route" .Values.expose.type }}
-    host: {{ .Values.expose.hostname }}
-  {{- else if and (eq "NodePort" .Values.expose.type) }}
-    nodePort: {{ .Values.expose.port }}
-  {{- else if eq "LoadBalancer" .Values.expose.type }}
-    port: {{ default 11222 .Values.expose.port }}
-  {{- end }}
-  {{- if .Values.monitoring.enableJMX }}
-  jmx:
-    enabled: true
-  {{- end }}
-  container:
-  {{- with .Values.resources }}
-    memory: {{ .limits.memory }}:{{ .requests.memory }}
-    cpu: {{ .limits.cpu }}:{{ .requests.cpu }}
-  {{- end }}
-  {{- with .Values.storage }}
-    storage: {{ .size }}
-    {{- if .ephemeral }}
-    ephemeralStorage: true
-    {{- else if and .storageClassName (not .ephemeral)  }}
-    storageClassName: {{ .storageClassName }}
-    {{- end }}
-  {{- end }}
-  service:
     container:
   {{- with .Values.probes.readinessProbe }}
       readinessProbe:
@@ -86,6 +50,41 @@ spec:
         successThreshold: {{ .successThreshold }}
         timeoutSeconds: {{ .timeoutSeconds }}
   {{- end }}
+  {{- if .Values.customConfig.enabled }}
+  configMapName: {{ .Release.Name }}-datagrid-custom-config
+  {{- end }}
+  upgrades:
+    type: {{ .Values.infinispan.upgradeType }}
+  {{- if .Values.infinispan.disableConfigListener }}
+  configListener:
+    enabled: false
+  {{- end }}
+  expose:
+    type: {{ .Values.expose.type }}
+  {{- if and (eq "Route" .Values.expose.type) .Values.expose.hostname }}
+    host: {{ .Values.expose.hostname }}
+  {{- else if and (eq "NodePort" .Values.expose.type) }}
+    nodePort: {{ .Values.expose.port }}
+  {{- else if eq "LoadBalancer" .Values.expose.type }}
+    port: {{ default 11222 .Values.expose.port }}
+  {{- end }}
+  {{- if .Values.monitoring.enableJMX }}
+  jmx:
+    enabled: true
+  {{- end }}
+  container:
+  {{- with .Values.resources }}
+    memory: {{ .limits.memory }}:{{ .requests.memory }}
+    cpu: {{ .limits.cpu }}:{{ .requests.cpu }}
+  {{- end }}
+  {{- with .Values.storage }}
+    storage: {{ .size }}
+    {{- if .ephemeral }}
+    ephemeralStorage: true
+    {{- else if and .storageClassName (not .ephemeral)  }}
+    storageClassName: {{ .storageClassName }}
+    {{- end }}
+  {{- end }}
   security:
     endpointAuthentication: {{ not .Values.authentication.disable }}
   {{- if and .Values.authentication.credentialsSecretName
@@ -104,6 +103,35 @@ spec:
     categories:
     {{- range $category, $level := .Values.logging }}
       {{ $category }}: {{ $level }}
+    {{- end }}
+  {{- end }}
+  {{- with .Values.availability -}}
+    {{- if .enabled }}
+  affinity:
+    podAntiAffinity:
+      {{- if eq "preferred" .antiAffinitityType }}
+      {{- $weight := 100 }}
+      preferredDuringSchedulingIgnoredDuringExecution:
+        {{- if .zone }}
+        - weight: {{ $weight }}
+          podAffinityTerm:
+            {{- include "label-selector.zone" $ | nindent 12 }}
+          {{- $weight = 90 -}}
+        {{- end }}
+        {{- if .hostname }}
+        - weight: {{ $weight }}
+          podAffinityTerm:
+            {{- include "label-selector.hostname" $ | nindent 12 }}
+        {{- end }}        
+      {{- else if eq "required" .antiAffinitityType }}
+      requiredDuringSchedulingIgnoredDuringExecution:
+        {{- if .zone }}
+        - {{ include "label-selector.zone" $ | indent 10 | trim }}
+        {{- end }}
+        {{- if .hostname }}
+        - {{ include "label-selector.hostname" $ | indent 10 | trim }}
+        {{- end }}
+      {{- end }}
     {{- end }}
   {{- end }}
 {{- end -}}
