@@ -1,0 +1,40 @@
+---
+{{- /*
+This template will create a horizontal pod autoscaler for the Red Hat Data Grid 
+cluster with options for cpu or memory utilization. Consider the types of Data
+Grid caches that are defined. Distributed and Replicated caches have very
+different scaling requirements, so defining a HorizontalPodAutoscaler for 
+server’s running a combination of these cache types may not be advantageous.
+*/}}
+{{- if and .Values.autoscaling.enabled 
+  (or .Values.autoscaling.cpuAverageUtilization
+  .Values.autoscaling.memoryAverageUtilization) -}}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ .Values.infinispan.name }}-autoscaler
+spec:
+  scaleTargetRef:
+    apiVersion: infinispan.org/v1
+    kind: Infinispan
+    name: {{ .Values.infinispan.name }} 
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+  {{- if .Values.autoscaling.cpuAverageUtilization }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.cpuAverageUtilization }}
+  {{- end }}
+  {{- if .Values.autoscaling.memoryAverageUtilization }}
+    - type: Resource
+      resource:
+        name: memory 
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.memoryAverageUtilization }}
+  {{- end }}
+{{- end -}}

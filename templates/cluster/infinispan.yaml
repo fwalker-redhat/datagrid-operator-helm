@@ -13,7 +13,11 @@ metadata:
     infinispan.org/monitoring: 'false'
   {{- end }}
 spec:
+  {{- if not (and .Values.autoscaling.enabled 
+    (or .Values.autoscaling.cpuAverageUtilization
+    .Values.autoscaling.memoryAverageUtilization)) }}
   replicas: {{ .Values.infinispan.replicas }}
+  {{- end }}
   version: {{ .Values.infinispan.version }}
   service:
     type: DataGrid

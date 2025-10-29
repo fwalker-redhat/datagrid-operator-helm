@@ -198,7 +198,16 @@ availability:
 # upgrade procedures as it will interfere with the upgrade process.
 # @default -- See child keys
 autoscaling:
+  # -- (bool) Enable autoscaling.
   enabled: false
+  # -- Minimum amount of pods.
+  minReplicas: 1
+  # -- Maximum amount of pods.
+  maxReplicas: 3
+  # -- (int) CPU percentage utilization that triggers a scaling operation.
+  cpuAverageUtilization:
+  # -- (int) Memory percentage utilization that triggers a scaling operation.
+  memoryAverageUtilization:
 
 # -- Control storage resources for Red Hat Data Grid. This will provide storage
 # for preserving cluster state during shutdown and for passivated cache entries.

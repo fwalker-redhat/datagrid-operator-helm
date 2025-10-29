@@ -13,6 +13,11 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | authentication.disable | bool | `false` | Disable authentication. Not recommended for production. |
 | authorization | object | See child keys | Control authorization for Red Hat Data Grid. |
 | autoscaling | object | See child keys | Control autoscaling for Red Hat Data Grid. This should be disabled during upgrade procedures as it will interfere with the upgrade process. |
+| autoscaling.cpuAverageUtilization | int | `nil` | CPU percentage utilization that triggers a scaling operation. |
+| autoscaling.enabled | bool | `false` | Enable autoscaling. |
+| autoscaling.maxReplicas | int | `3` | Maximum amount of pods. |
+| autoscaling.memoryAverageUtilization | int | `nil` | Memory percentage utilization that triggers a scaling operation. |
+| autoscaling.minReplicas | int | `1` | Minimum amount of pods. |
 | availability | string | See child keys | Control high availability for Red Hat Data Grid. |
 | caches | string | See child keys | Cache configuration for caches |
 | credentialsStore | object | See child keys | Configuration of a `Secret` used to store sensitive information |
