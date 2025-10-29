@@ -85,11 +85,21 @@ monitoring:
 # -- Control resource configurations for Red Hat Data Grid
 # @default -- See child keys
 resources:
+  # -- A limit sets the maximum amount of a resource (CPU or memory) that a
+  # container is allowed to consume.
+  # @default -- See child keys
   limits:
+    # -- The maximum amount of CPU the application is allowed to use.
     cpu: 2000m
+    # -- The maximum amount of memory the application is allowed to use.
     memory: 2Gi
+  # -- A request specifies the minimum amount of a resource (CPU or memory) that
+  # Kubernetes guarantees for a container.
+  # @default -- See child keys
   requests:
+    # -- The amount of CPU guaranteed for the application to use.
     cpu: 1000m
+    # -- The amount of memory guaranteed for the application to use.
     memory: 1Gi
 
 # -- Control authentication configurations for Red Hat Data Grid

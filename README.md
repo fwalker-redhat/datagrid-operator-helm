@@ -65,6 +65,12 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | probes.startupProbe.successThreshold | int | `1` | Minimum consecutive successes for the probe to be considered successful after having failed. |
 | probes.startupProbe.timeoutSeconds | int | `1` | Number of seconds after which the probe times out. |
 | resources | object | See child keys | Control resource configurations for Red Hat Data Grid |
+| resources.limits | object | See child keys | A limit sets the maximum amount of a resource (CPU or memory) that a container is allowed to consume. |
+| resources.limits.cpu | string | `"2000m"` | The maximum amount of CPU the application is allowed to use. |
+| resources.limits.memory | string | `"2Gi"` | The maximum amount of memory the application is allowed to use. |
+| resources.requests | object | See child keys | A request specifies the minimum amount of a resource (CPU or memory) that Kubernetes guarantees for a container. |
+| resources.requests.cpu | string | `"1000m"` | The amount of CPU guaranteed for the application to use. |
+| resources.requests.memory | string | `"1Gi"` | The amount of memory guaranteed for the application to use. |
 | storage | string | See child keys | Control storage resources for Red Hat Data Grid. This will provide storage for preserving cluster state during shutdown and for passivated cache entries. |
 
 ----------------------------------------------
