@@ -46,7 +46,22 @@ spec:
   {{- end }}
   security:
     endpointAuthentication: {{ not .Values.authentication.disable }}
-  {{- if .Values.authentication.credentialsSecretName }}
+  {{- if and .Values.authentication.credentialsSecretName
+  (not .Values.authentication.disable) }}
     endpointSecretName: {{ .Values.authentication.credentialsSecretName }}
+  {{- end }}
+  {{- if .Values.encryption.disable }}
+    endpointEncryption:
+      type: None
+  {{- end }}
+  {{- if and .Values.credentialsStore.enabled .Values.credentialsStore.secretName }}
+    credentialStoreSecretName: {{ .Values.credentialsStore.secretName }}
+  {{- end }}
+  {{- if .Values.logging }}
+  logging:
+    categories:
+    {{- range $category, $level := .Values.logging }}
+      {{ $category }}: {{ $level }}
+    {{- end }}
   {{- end }}
 {{- end -}}

@@ -103,3 +103,62 @@ authentication:
 # @default -- See child keys
 encryption:
   disable: false
+
+# -- Control probe override configurations for Red Hat Data Grid.
+# If no overrides are specified sensible operator defaults will be used.
+# @default -- See child keys
+probes:
+  # -- Readiness probe overrides.
+  # @default -- See child keys
+  readinessProbe:
+    failureThreshold:
+    initialDelaySeconds:
+    periodSeconds:
+    successThreshold:
+    timeoutSeconds:
+  # -- Liveness probe overrides.
+  # @default -- See child keys
+  livenessProbe:
+    failureThreshold:
+    initialDelaySeconds:
+    periodSeconds:
+    successThreshold:
+    timeoutSeconds:
+  # -- Startup probe overrides.
+  # @default -- See child keys
+  startupProbe:
+    failureThreshold:
+    initialDelaySeconds:
+    periodSeconds:
+    successThreshold:
+    timeoutSeconds:
+
+# -- Control log level for categories for Red Hat Data Grid.
+# @default -- See child keys
+logging:
+  org.infinispan: info
+  org.jgroups: info
+  org.wildfly: info
+# -- Control authorization for Red Hat Data Grid.
+# @default -- See child keys
+authorization:
+  enabled: false
+
+# -- Control high availability for Red Hat Data Grid.
+# @default -- See child keys
+availability:
+
+# -- Control autoscaling for Red Hat Data Grid. This should be disabled during
+# upgrade procedures as it will interfere with the upgrade process.
+# @default -- See child keys
+autoscaling:
+  enabled: false
+
+# -- Control storage resources for Red Hat Data Grid. This will provide storage
+# for preserving cluster state during shutdown and for passivated cache entries.
+# @default -- See child keys
+storage:
+
+# -- Cache configuration for caches
+# @default -- See child keys
+caches:
