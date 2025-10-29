@@ -35,8 +35,7 @@ infinispan:
   replicas: 1
   # -- The name of the Red Hat Data Grid cluster
   name: datagrid
-  # -- Used to control the behavior of Red Hat Data Grid version upgrades. Not
-  # to be confused with the Red Hat Data Grid Operator version.
+  # -- Used to control the behavior of Red Hat Data Grid version upgrades.
   upgradeType: Shutdown
   # -- Disable the config listener pod. You should do this only if you do not 
   # need declarative Kubernetes representations of Data Grid resources created
@@ -52,7 +51,7 @@ customConfig:
   # -- (object) The custom Red Hat Data Grid configuration
   config:
 
-# -- Configuration of a secret used to store sensitive information
+# -- Configuration of a `Secret` used to store sensitive information
 # @default -- See child keys
 credentialsStore:
   # -- (boolean) Use a `Secret` to store sensitive information such as
@@ -96,42 +95,78 @@ resources:
 # -- Control authentication configurations for Red Hat Data Grid
 # @default -- See child keys
 authentication:
+  # -- (bool) Disable authentication. Not recommended for production.
   disable: false
+  # -- (string) Name of the `Secret` containing an identities declaration used to
+  # configure a properties realm
   credentialsSecretName:
 
 # -- Control encryption configurations for Red Hat Data Grid
 # @default -- See child keys
 encryption:
+  # -- (bool) Disable encryption. Not recommended for production.
   disable: false
 
 # -- Control probe override configurations for Red Hat Data Grid.
 # If no overrides are specified sensible operator defaults will be used.
 # @default -- See child keys
 probes:
-  # -- Readiness probe overrides.
+  # -- Readiness probe overrides. Determines if a container is ready to accept
+  # traffic. If a readiness probe fails, Kubernetes removes the pod from all
+  # matching service endpoints, preventing traffic from being routed to it until
+  # it becomes ready again.
   # @default -- See child keys
   readinessProbe:
-    failureThreshold:
+    # -- (int) Minimum consecutive failures for the probe to be considered
+    # failed after having succeeded. 
+    failureThreshold: 5
+    # -- (int) Number of seconds after the container has started before liveness
+    # probes are initiated.
     initialDelaySeconds:
-    periodSeconds:
-    successThreshold:
-    timeoutSeconds:
-  # -- Liveness probe overrides.
+    # -- (int) How often (in seconds) to perform the probe.
+    periodSeconds: 10
+    # -- (int) Minimum consecutive successes for the probe to be considered
+    # successful after having failed.
+    successThreshold: 1
+    # -- (int) Number of seconds after which the probe times out.
+    timeoutSeconds: 1
+  # -- Liveness probe overrides. Determines if a container is running and
+  # healthy. If a liveness probe fails, Kubernetes restarts the container to
+  # attempt recovery.
   # @default -- See child keys
   livenessProbe:
-    failureThreshold:
+    # -- (int) Minimum consecutive failures for the probe to be considered
+    # failed after having succeeded. 
+    failureThreshold: 5
+    # -- (int) Number of seconds after the container has started before liveness
+    # probes are initiated.
     initialDelaySeconds:
-    periodSeconds:
-    successThreshold:
-    timeoutSeconds:
-  # -- Startup probe overrides.
+    # -- (int) How often (in seconds) to perform the probe.
+    periodSeconds: 10
+    # -- (int) Minimum consecutive successes for the probe to be considered
+    # successful after having failed.
+    successThreshold: 1
+    # -- (int) Number of seconds after which the probe times out.
+    timeoutSeconds: 1
+  # -- Startup probe overrides. Verifies whether the application within a
+  # container has successfully started. This is particularly useful for 
+  # slow-starting applications, preventing them from being prematurely killed by
+  # liveness probes before they've had a chance to fully initialize.
   # @default -- See child keys
   startupProbe:
-    failureThreshold:
-    initialDelaySeconds:
-    periodSeconds:
-    successThreshold:
-    timeoutSeconds:
+    # -- (int) Minimum consecutive failures for the probe to be considered
+    # failed after having succeeded. 
+    failureThreshold: 600
+    # -- (int) Number of seconds after the container has started before liveness
+    # probes are initiated.
+    initialDelaySeconds: 3
+    # -- (int) How often (in seconds) to perform the probe.
+    periodSeconds: 1
+    # -- (int) Minimum consecutive successes for the probe to be considered
+    # successful after having failed.
+    successThreshold: 1
+    # -- (int) Number of seconds after which the probe times out.
+    timeoutSeconds: 1
 
 # -- Control log level for categories for Red Hat Data Grid.
 # @default -- See child keys
@@ -139,6 +174,7 @@ logging:
   org.infinispan: info
   org.jgroups: info
   org.wildfly: info
+
 # -- Control authorization for Red Hat Data Grid.
 # @default -- See child keys
 authorization:

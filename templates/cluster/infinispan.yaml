@@ -39,10 +39,40 @@ spec:
   jmx:
     enabled: true
   {{- end }}
-  {{- with .Values.resources }}
   container:
+  {{- with .Values.resources }}
     memory: {{ .limits.memory }}:{{ .requests.memory }}
     cpu: {{ .limits.cpu }}:{{ .requests.cpu }}
+  {{- end }}
+  service:
+    container:
+  {{- with .Values.probes.readinessProbe }}
+      readinessProbe:
+        failureThreshold: {{ .failureThreshold }}
+    {{- if .initialDelaySeconds }}
+        initialDelaySeconds: {{ .initialDelaySeconds }}
+    {{- end }}
+        periodSeconds: {{ .periodSeconds }}
+        successThreshold: {{ .successThreshold }}
+        timeoutSeconds: {{ .timeoutSeconds }}
+  {{- end }}
+  {{- with .Values.probes.livenessProbe }}
+      livenessProbe:
+        failureThreshold: {{ .failureThreshold }}
+    {{- if .initialDelaySeconds }}
+        initialDelaySeconds: {{ .initialDelaySeconds }}
+    {{- end }}
+        periodSeconds: {{ .periodSeconds }}
+        successThreshold: {{ .successThreshold }}
+        timeoutSeconds: {{ .timeoutSeconds }}
+  {{- end }}
+  {{- with .Values.probes.startupProbe }}
+      startupProbe:
+        failureThreshold: {{ .failureThreshold }}
+        initialDelaySeconds: {{ .initialDelaySeconds }}
+        periodSeconds: {{ .periodSeconds }}
+        successThreshold: {{ .successThreshold }}
+        timeoutSeconds: {{ .timeoutSeconds }}
   {{- end }}
   security:
     endpointAuthentication: {{ not .Values.authentication.disable }}
