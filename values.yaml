@@ -110,6 +110,42 @@ authentication:
   # -- (string) Name of the `Secret` containing an identities declaration used to
   # configure a properties realm
   credentialsSecretName:
+  propertiesRealm:
+    enabled: true
+  ldapRealm:
+    enabled: false
+    isActiveDirectory: false
+    url:
+    principal:
+    credentialAlias:
+    connectionTimeout:
+    readTimeout:
+    connectionPooling: true
+    referralMode:
+    pageSize:
+    directVerification: true
+    nameRewriter:
+      commonNamePrincipalTransformer:
+        enabled: false
+      casePrincipalTransformer:
+        enabled: false
+        uppercase: true
+      regexPrincipalTransformer:
+        enabled: false
+        pattern:
+        replacement:
+    identityMapping:
+      rdnIdentifier:
+      searchDn:
+      searchRecursive: false
+      userPasswordMapper:
+        from:
+        verifiable: false
+      attributeMapping:
+        - filter:
+          filterDn:
+          from:
+          to:
 
 # -- Control encryption configurations for Red Hat Data Grid
 # @default -- See child keys

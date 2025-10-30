@@ -22,6 +22,14 @@ spec:
   service:
     type: DataGrid
     container:
+  {{- with .Values.storage }}
+      storage: {{ .size }}
+    {{- if .ephemeral }}
+      ephemeralStorage: true
+    {{- else if and .storageClassName (not .ephemeral)  }}
+      storageClassName: {{ .storageClassName }}
+    {{- end }}
+  {{- end }}
   {{- with .Values.probes.readinessProbe }}
       readinessProbe:
         failureThreshold: {{ .failureThreshold }}
@@ -76,14 +84,6 @@ spec:
   {{- with .Values.resources }}
     memory: {{ .limits.memory }}:{{ .requests.memory }}
     cpu: {{ .limits.cpu }}:{{ .requests.cpu }}
-  {{- end }}
-  {{- with .Values.storage }}
-    storage: {{ .size }}
-    {{- if .ephemeral }}
-    ephemeralStorage: true
-    {{- else if and .storageClassName (not .ephemeral)  }}
-    storageClassName: {{ .storageClassName }}
-    {{- end }}
   {{- end }}
   security:
     endpointAuthentication: {{ not .Values.authentication.disable }}
