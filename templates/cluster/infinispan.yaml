@@ -98,6 +98,22 @@ spec:
   {{- if and .Values.credentialsStore.enabled .Values.credentialsStore.secretName }}
     credentialStoreSecretName: {{ .Values.credentialsStore.secretName }}
   {{- end }}
+  {{- with .Values.authorization -}}
+    {{- if .enabled }}
+    authorization:
+      enabled: true
+      {{- if .customRoles.enabled }}
+      roles:
+        {{- range .customRoles.roles }}
+        - name: {{ .name }}
+          permissions:
+          {{- range .permissions }}
+            - {{ . }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
   {{- if .Values.logging }}
   logging:
     categories:

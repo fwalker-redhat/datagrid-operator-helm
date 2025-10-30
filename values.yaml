@@ -188,7 +188,24 @@ logging:
 # -- Control authorization for Red Hat Data Grid.
 # @default -- See child keys
 authorization:
+  # -- Enable authorization to provide more granular security control over the
+  # Red Hat Data Grid cluster.
   enabled: false
+  # -- Custom RBAC roles permission configuration.
+  # @default -- See child keys
+  customRoles:
+    # -- Enable custom role configuration.
+    enabled: false
+    # -- List of custom role configurations.
+    # @default -- See example role entry
+    roles:
+      -  
+        # -- Name of the custom role
+        name: custom-admin
+        # -- A list of permissions with possible values being `ALL` `ALL_READ`,
+        # `ALL_WRITE`, `LISTEN`, `EXEC`, `MONITOR`, `CREATE`
+        permissions:
+          - ALL
 
 # -- Control high availability for Red Hat Data Grid.
 # @default -- See child keys

@@ -12,6 +12,12 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | authentication.credentialsSecretName | string | `nil` | Name of the `Secret` containing an identities declaration used to configure a properties realm |
 | authentication.disable | bool | `false` | Disable authentication. Not recommended for production. |
 | authorization | object | See child keys | Control authorization for Red Hat Data Grid. |
+| authorization.customRoles | object | See child keys | Custom RBAC roles permission configuration. |
+| authorization.customRoles.enabled | bool | `false` | Enable custom role configuration. |
+| authorization.customRoles.roles | list | See example role entry | List of custom role configurations. |
+| authorization.customRoles.roles[0].name | string | `"custom-admin"` | Name of the custom role |
+| authorization.customRoles.roles[0].permissions | list | `["ALL"]` | A list of permissions with possible values being `ALL` `ALL_READ`, `ALL_WRITE`, `LISTEN`, `EXEC`, `MONITOR`, `CREATE` |
+| authorization.enabled | bool | `false` | Enable authorization to provide more granular security control over the Red Hat Data Grid cluster. |
 | autoscaling | object | See child keys | Control autoscaling for Red Hat Data Grid. This should be disabled during upgrade procedures as it will interfere with the upgrade process. |
 | autoscaling.cpuAverageUtilization | int | `nil` | CPU percentage utilization that triggers a scaling operation. |
 | autoscaling.enabled | bool | `false` | Enable autoscaling. |
