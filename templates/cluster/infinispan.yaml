@@ -95,6 +95,12 @@ spec:
     endpointEncryption:
       type: None
   {{- end }}
+  {{- if and .Values.authentication.clientCertificateAuthentication.enabled 
+    (not .Values.authentication.disable ) }}
+    endpointEncryption:
+      clientCert: {{ .Values.authentication.clientCertificateAuthentication.strategy }}
+      clientCertSecretName: {{ .Values.authentication.clientCertificateAuthentication.clientCertSecretName }}
+  {{- end }}
   {{- if and .Values.credentialsStore.enabled .Values.credentialsStore.secretName }}
     credentialStoreSecretName: {{ .Values.credentialsStore.secretName }}
   {{- end }}

@@ -146,6 +146,16 @@ authentication:
           filterDn:
           from:
           to:
+  clientCertificateAuthentication:
+    enabled: false
+    # -- (string) Either `Validate`, which only checks for a valid part of the
+    # certificate chain (typically the CA) and requires credentials to be used,
+    # or `Authenticate`, which requires the client certificate to have the
+    # principal name as the `DN` of the certificate.
+    strategy: Validate
+    # -- (string) Name of the secret that stores client certificates and the
+    # CA certificate to trust.
+    clientCertSecretName: 
 
 # -- Control encryption configurations for Red Hat Data Grid
 # @default -- See child keys

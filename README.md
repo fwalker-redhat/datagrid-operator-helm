@@ -9,6 +9,8 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | authentication | object | See child keys | Control authentication configurations for Red Hat Data Grid |
+| authentication.clientCertificateAuthentication.clientCertSecretName | string | `nil` | Name of the secret that stores client certificates and the CA certificate to trust. |
+| authentication.clientCertificateAuthentication.strategy | string | `"Validate"` | Either `Validate`, which only checks for a valid part of the certificate chain (typically the CA) and requires credentials to be used, or `Authenticate`, which requires the client certificate to have the principal name as the `DN` of the certificate. |
 | authentication.credentialsSecretName | string | `nil` | Name of the `Secret` containing an identities declaration used to configure a properties realm |
 | authentication.disable | bool | `false` | Disable authentication. Not recommended for production. |
 | authorization | object | See child keys | Control authorization for Red Hat Data Grid. |
