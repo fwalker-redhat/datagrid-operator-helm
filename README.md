@@ -74,6 +74,7 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | customConfig.config | object | `nil` | The custom Red Hat Data Grid configuration |
 | customConfig.enabled | boolean | `false` | Create a `ConfigMap` with a custom Red Hat Data Grid configuration |
 | encryption | object | See child keys | Control encryption configurations for Red Hat Data Grid |
+| encryption.certSecretName | string | `nil` | Name of the secret containing the custom TLS/SSL certificate and key |
 | encryption.disable | bool | `false` | Disable encryption. Not recommended for production. |
 | endpoints | object | See child keys | Control endpoints when multiple security realms are defined. This will have no effect unless the `authentication.ldapRealm.enabled` value is set to `true` |
 | endpoints.memcachedConnector | bool | `false` | Enable the Memcached Endpoint |

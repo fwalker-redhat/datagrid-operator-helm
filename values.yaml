@@ -233,13 +233,16 @@ authentication:
     strategy: Validate
     # -- (string) Name of the secret that stores client certificates and the
     # CA certificate to trust.
-    clientCertSecretName: 
+    clientCertSecretName:
 
 # -- Control encryption configurations for Red Hat Data Grid
 # @default -- See child keys
 encryption:
   # -- (bool) Disable encryption. Not recommended for production.
   disable: false
+  # -- (string) Name of the secret containing the custom TLS/SSL certificate
+  # and key
+  certSecretName:
 
 # -- Control probe override configurations for Red Hat Data Grid.
 # If no overrides are specified sensible operator defaults will be used.
