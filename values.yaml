@@ -110,43 +110,121 @@ authentication:
   # -- (string) Name of the `Secret` containing an identities declaration used to
   # configure a properties realm
   credentialsSecretName:
+  # -- Control Properties Security Realm Configuration when using multiple
+  # security realms
+  # @default -- See child keys
   propertiesRealm:
+    # -- Enable properties security realm
     enabled: true
+  # -- Control LDAP Security Realm Configuration. This will result in a custom
+  # configuration being created as a `ConfigMap`
+  # @default -- See child keys
   ldapRealm:
+    # -- Enable LDAP security realm
     enabled: false
+    # -- If set `directVerification` will be set to true automatically and
+    # endpoints will be configured to allow `BASIC` authentication on the
+    # `restConnector` endpoint and `PLAIN` authentication on the
+    # `hotrodConnector` endpoint
     isActiveDirectory: false
+    # -- (string) Specifies the URL for LDAP server connections in the format
+    # ldap[s]://{hostname}:{port}
     url:
+    # -- (string) Specifies the user principal for LDAP server connections
     principal:
+    # -- (string) Name of the key from the `credentialsStore.secretName` that
+    # contains the password used to connect to the LDAP server
     credentialAlias:
+    # -- (string) Sets the timeout, in milliseconds, for LDAP server
+    # connections. The default value is 5 seconds. You can optionally set one of
+    # the following units: ms (milliseconds), s (seconds), m (minutes), h
+    # (hours), d (days)
     connectionTimeout:
+    # -- (string) Sets the read timeout, in milliseconds, for LDAP server
+    # operations. The default value is 1 minute. You can optionally set one of
+    # the following units: ms (milliseconds), s (seconds), m (minutes), h
+    # (hours), d (days)
     readTimeout:
+    # -- (bool) Enables connection pooling
     connectionPooling: true
+    # -- (string) Specifies if LDAP server referrals are followed and
+    # corresponds to the REFERRAL ("java.naming.referral") environment property.
+    # Values are "ignore", "follow" (default), and "throw"
     referralMode:
+    # -- (int) Sets the page size for realm iteration. The default value is 50
     pageSize:
-    directVerification: true
+    # -- Configures the realm to verify credentials by connecting to LDAP
+    # servers with the account
+    directVerification: false
+    # -- Specifies a name rewriter that transforms names returned by a realm.
+    # Only one can be active at a time.
+    # @default -- See child keys
     nameRewriter:
+      # -- Specifies a PrincipalTransformer definition which extracts the first
+      # CommonName (CN) from a DistinguishedName (DN)
+      # @default -- See child keys
       commonNamePrincipalTransformer:
+        # -- Enables the `CommonNamePrincipalTransformer`
         enabled: false
+      # -- Specifies a PrincipalTransformer definition using case conversion
+      # @default -- See child keys
       casePrincipalTransformer:
+        # -- Enables the `CasePrincipalTransformer`
         enabled: false
+        # -- Whether to transform to UPPERCASE or lowercase
         uppercase: true
+      # -- Specifies a PrincipalTransformer definition using regular expressions
+      # and Matcher based replacement
+      # @default -- See child keys
       regexPrincipalTransformer:
+        # -- Enables the `RegexPrincipalTransformer`
         enabled: false
+        # -- (string) Specifies the regular expression for this
+        # PrincipalTransformer
         pattern:
+        # -- (string) Specifies the replacement string for the
+        # PrincipalTransformer
         replacement:
+    # -- Specifies configuration options that define how principals are mapped to
+    # corresponding entries in LDAP servers
+    # @default -- See child keys
     identityMapping:
+      # -- (string) Specifies an LDAP attribute that contains the user name and
+      # appears in the path of new entries
       rdnIdentifier:
+      # -- (string) Names the context for query execution
       searchDn:
+      # -- Performs recursive queries
       searchRecursive: false
+      # -- (string) Specifies the LDAP filter that retrieves an identity by name.
+      # In the default value, "{0}" is replaced with the searched identity name
+      # and "rdn_identifier" is replaced with the value of the "rdn-identifier"
+      # attribute.
+      filterName:
+      # -- Specifies the user password credential mapping defined for this
+      # resource
+      # @default -- See child keys
       userPasswordMapper:
-        from:
+        # -- Enables the user password credential mapper. This will be enabled
+        # automatically if `authentication.ldapRealm.directVerification` is set
+        # to `true`
+        enabled: false
+        # -- The name of the LDAP attribute to map to an identity user password
+        # credential.
+        from: userPassword
+        # -- If the password credential is verifiable
         verifiable: false
+      # -- Specifies the attribute mappings defined for this resource
+      # @default -- See child keys
       attributeMapping:
         - filter:
           filterDn:
           from:
           to:
+  # Used to configure Client Certificate Authentication
+  # @default -- See child keys
   clientCertificateAuthentication:
+    # -- Enable Client Certificate Authentication
     enabled: false
     # -- (string) Either `Validate`, which only checks for a valid part of the
     # certificate chain (typically the CA) and requires credentials to be used,
@@ -293,6 +371,15 @@ storage:
   # persistent volume claim (PVC). If left blank the persistent volume claim
   # uses the default storage class.
   storageClassName:
+
+# -- Control endpoints when multiple security realms are defined. This will have
+# no effect unless the `authentication.ldapRealm.enabled` value is set to `true`
+# @default -- See child keys
+endpoints:
+  # -- Enable the Redis Endpoint
+  respConnector: false
+  # -- Enable the Memcached Endpoint
+  memcachedConnector: false
 
 # -- Cache configuration for caches
 # @default -- See child keys

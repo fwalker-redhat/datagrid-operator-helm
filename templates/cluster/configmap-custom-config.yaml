@@ -1,0 +1,130 @@
+{{- /*
+This template will create a custom configuration `ConfigMap` for Red Hat Data
+Grid cluster.
+*/}}
+{{- if or .Values.customConfig.enabled .Values.authentication.ldapRealm.enabled -}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-datagrid-custom-config
+data:
+  infinispan-config.yaml: |
+  {{- if not .Values.authentication.ldapRealm.enabled }}
+  {{- else }}
+    infinispan:
+      server:
+        security:
+          securityRealms:
+            - name: default
+              serverIdentities:
+                ssl:
+                  keystore:
+                    path: /etc/security/conf/operator-security/keystore.pem
+                    keystore-password: ""
+    {{- with .Values.authentication.ldapRealm -}}
+      {{- if .enabled }}
+              ldapRealm:
+                url: {{ .url }}
+                principal: {{ .principal }}
+                credentialReference:
+                  store: credentials
+                  alias: {{ .credentialAlias }}
+        {{- if .connectionTimeout }}
+                connectionTimeout: {{ .connectionTimeout }}
+        {{- end }}
+        {{- if .readTimeout }}
+                readTimeout: {{ .readTimeout }}
+        {{- end }}
+        {{- if .connectionPooling }}
+                connectionPooling: {{ .connectionPooling }}
+        {{- else }}
+                connectionPooling: false
+        {{- end }}
+        {{- if .referralMode }}
+                referralMode: {{ .referralMode }}
+        {{- end }}
+        {{- if .pageSize }}
+                pageSize: {{ .pageSize }}
+        {{- end }}
+        {{- if or .isActiveDirectory .directVerification }}
+                directVerification: true
+        {{- else }}
+                directVerification: false
+        {{- end }}
+        {{- with .nameRewriter }}
+          {{- if .commonNamePrincipalTransformer.enabled }}
+                nameRewriter:
+                  commonNamePrincipalTransformer: ~
+          {{- else if .casePrincipalTransformer.enabled }}
+                nameRewriter:
+                  casePrincipalTransformer:
+                    uppercase: {{ get .casePrincipalTransformer "uppercase" }}
+          {{- else if .regexPrincipalTransformer.enabled }}
+                nameRewriter:
+                  regexPrincipalTransformer:
+                    pattern: {{ .regexPrincipalTransformer.pattern }}
+                    replacement: {{ .regexPrincipalTransformer.replacement }}
+          {{- end }}
+        {{- end }}
+        {{- with .identityMapping }}
+                identityMapping:
+                  rdnIdentifier: {{ .rdnIdentifier }}
+                  searchDn: {{ .searchDn }}
+                  searchRecursive: {{ .searchRecursive }}
+          {{- if .filterName }}
+                  filterName: {{ .filterName }}
+          {{- end }}
+          {{- if or $.Values.authentication.ldapRealm.isActiveDirectory (or 
+          $.Values.authentication.ldapRealm.directVerification 
+          .userPasswordMapper.enabled) }}
+                  userPasswordMapper:
+                    from: {{ .userPasswordMapper.from }}
+                    verifiable: {{ get .userPasswordMapper "verifiable" }}
+          {{- end }}
+                  attributeMapping:
+          {{- range .attributeMapping }}
+                    - filter: {{ .filter }}
+                      filterDn: {{ .filterDn }}
+                      from: {{ .from }}
+                      to: {{ .to }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.authentication.propertiesRealm.enabled }}
+              propertiesRealm:
+                groupsAttribute: "Roles"
+                userProperties:
+                  path: /opt/infinispan/server/conf/cli-users.properties
+                groupProperties:
+                  path: /opt/infinispan/server/conf/cli-groups.properties
+    {{- end }}
+    {{- if and .Values.authentication.ldapRealm.enabled
+    .Values.authentication.propertiesRealm.enabled }}
+              distributedRealm: ~
+    {{- end }}
+    {{- if or .Values.authentication.ldapRealm.isActiveDirectory
+      .Values.authentication.ldapRealm.directVerification }}
+        endpoints:
+          - socketBinding: default
+            securityRealm: default
+            restConnector:
+              authentication:
+                mechanisms: BASIC
+            hotrodConnector:
+              authentication:
+                sasl:
+                  mechanisms: PLAIN
+      {{- if .Values.endpoints.memcachedConnector }}
+            memcachedConnector:
+              authentication:
+                sasl:
+                  mechanisms: PLAIN
+      {{- end }}
+      {{- if .Values.endpoints.respConnector }}
+            respConnector: ~
+      {{- end }}
+    {{- end }}
+  {{- end }}
+{{- end -}}

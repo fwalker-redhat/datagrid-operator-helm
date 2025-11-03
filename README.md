@@ -10,9 +10,44 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 |-----|------|---------|-------------|
 | authentication | object | See child keys | Control authentication configurations for Red Hat Data Grid |
 | authentication.clientCertificateAuthentication.clientCertSecretName | string | `nil` | Name of the secret that stores client certificates and the CA certificate to trust. |
+| authentication.clientCertificateAuthentication.enabled | bool | `false` | Enable Client Certificate Authentication |
 | authentication.clientCertificateAuthentication.strategy | string | `"Validate"` | Either `Validate`, which only checks for a valid part of the certificate chain (typically the CA) and requires credentials to be used, or `Authenticate`, which requires the client certificate to have the principal name as the `DN` of the certificate. |
 | authentication.credentialsSecretName | string | `nil` | Name of the `Secret` containing an identities declaration used to configure a properties realm |
 | authentication.disable | bool | `false` | Disable authentication. Not recommended for production. |
+| authentication.ldapRealm | object | See child keys | Control LDAP Security Realm Configuration. This will result in a custom configuration being created as a `ConfigMap` |
+| authentication.ldapRealm.connectionPooling | bool | `true` | Enables connection pooling |
+| authentication.ldapRealm.connectionTimeout | string | `nil` | Sets the timeout, in milliseconds, for LDAP server connections. The default value is 5 seconds. You can optionally set one of the following units: ms (milliseconds), s (seconds), m (minutes), h (hours), d (days) |
+| authentication.ldapRealm.credentialAlias | string | `nil` | Name of the key from the `credentialsStore.secretName` that contains the password used to connect to the LDAP server |
+| authentication.ldapRealm.directVerification | bool | `false` | Configures the realm to verify credentials by connecting to LDAP servers with the account |
+| authentication.ldapRealm.enabled | bool | `false` | Enable LDAP security realm |
+| authentication.ldapRealm.identityMapping | object | See child keys | Specifies configuration options that define how principals are mapped to corresponding entries in LDAP servers |
+| authentication.ldapRealm.identityMapping.attributeMapping | list | See child keys | Specifies the attribute mappings defined for this resource |
+| authentication.ldapRealm.identityMapping.filterName | string | `nil` | Specifies the LDAP filter that retrieves an identity by name. In the default value, "{0}" is replaced with the searched identity name and "rdn_identifier" is replaced with the value of the "rdn-identifier" attribute. |
+| authentication.ldapRealm.identityMapping.rdnIdentifier | string | `nil` | Specifies an LDAP attribute that contains the user name and appears in the path of new entries |
+| authentication.ldapRealm.identityMapping.searchDn | string | `nil` | Names the context for query execution |
+| authentication.ldapRealm.identityMapping.searchRecursive | bool | `false` | Performs recursive queries |
+| authentication.ldapRealm.identityMapping.userPasswordMapper | object | See child keys | Specifies the user password credential mapping defined for this resource |
+| authentication.ldapRealm.identityMapping.userPasswordMapper.enabled | bool | `false` | Enables the user password credential mapper. This will be enabled automatically if `authentication.ldapRealm.directVerification` is set to `true` |
+| authentication.ldapRealm.identityMapping.userPasswordMapper.from | string | `"userPassword"` | The name of the LDAP attribute to map to an identity user password credential. |
+| authentication.ldapRealm.identityMapping.userPasswordMapper.verifiable | bool | `false` | If the password credential is verifiable |
+| authentication.ldapRealm.isActiveDirectory | bool | `false` | If set `directVerification` will be set to true automatically and endpoints will be configured to allow `BASIC` authentication on the `restConnector` endpoint and `PLAIN` authentication on the `hotrodConnector` endpoint |
+| authentication.ldapRealm.nameRewriter | object | See child keys | Specifies a name rewriter that transforms names returned by a realm. Only one can be active at a time. |
+| authentication.ldapRealm.nameRewriter.casePrincipalTransformer | object | See child keys | Specifies a PrincipalTransformer definition using case conversion |
+| authentication.ldapRealm.nameRewriter.casePrincipalTransformer.enabled | bool | `false` | Enables the `CasePrincipalTransformer` |
+| authentication.ldapRealm.nameRewriter.casePrincipalTransformer.uppercase | bool | `true` | Whether to transform to UPPERCASE or lowercase |
+| authentication.ldapRealm.nameRewriter.commonNamePrincipalTransformer | object | See child keys | Specifies a PrincipalTransformer definition which extracts the first CommonName (CN) from a DistinguishedName (DN) |
+| authentication.ldapRealm.nameRewriter.commonNamePrincipalTransformer.enabled | bool | `false` | Enables the `CommonNamePrincipalTransformer` |
+| authentication.ldapRealm.nameRewriter.regexPrincipalTransformer | object | See child keys | Specifies a PrincipalTransformer definition using regular expressions and Matcher based replacement |
+| authentication.ldapRealm.nameRewriter.regexPrincipalTransformer.enabled | bool | `false` | Enables the `RegexPrincipalTransformer` |
+| authentication.ldapRealm.nameRewriter.regexPrincipalTransformer.pattern | string | `nil` | Specifies the regular expression for this PrincipalTransformer |
+| authentication.ldapRealm.nameRewriter.regexPrincipalTransformer.replacement | string | `nil` | Specifies the replacement string for the PrincipalTransformer |
+| authentication.ldapRealm.pageSize | int | `nil` | Sets the page size for realm iteration. The default value is 50 |
+| authentication.ldapRealm.principal | string | `nil` | Specifies the user principal for LDAP server connections |
+| authentication.ldapRealm.readTimeout | string | `nil` | Sets the read timeout, in milliseconds, for LDAP server operations. The default value is 1 minute. You can optionally set one of the following units: ms (milliseconds), s (seconds), m (minutes), h (hours), d (days) |
+| authentication.ldapRealm.referralMode | string | `nil` | Specifies if LDAP server referrals are followed and corresponds to the REFERRAL ("java.naming.referral") environment property. Values are "ignore", "follow" (default), and "throw" |
+| authentication.ldapRealm.url | string | `nil` | Specifies the URL for LDAP server connections in the format ldap[s]://{hostname}:{port} |
+| authentication.propertiesRealm | object | See child keys | Control Properties Security Realm Configuration when using multiple security realms |
+| authentication.propertiesRealm.enabled | bool | `true` | Enable properties security realm |
 | authorization | object | See child keys | Control authorization for Red Hat Data Grid. |
 | authorization.customRoles | object | See child keys | Custom RBAC roles permission configuration. |
 | authorization.customRoles.enabled | bool | `false` | Enable custom role configuration. |
@@ -40,6 +75,9 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | customConfig.enabled | boolean | `false` | Create a `ConfigMap` with a custom Red Hat Data Grid configuration |
 | encryption | object | See child keys | Control encryption configurations for Red Hat Data Grid |
 | encryption.disable | bool | `false` | Disable encryption. Not recommended for production. |
+| endpoints | object | See child keys | Control endpoints when multiple security realms are defined. This will have no effect unless the `authentication.ldapRealm.enabled` value is set to `true` |
+| endpoints.memcachedConnector | bool | `false` | Enable the Memcached Endpoint |
+| endpoints.respConnector | bool | `false` | Enable the Redis Endpoint |
 | expose | object | See child keys | Used to expose Red Hat Data Grid for external connections |
 | expose.hostname | string | `nil` | A specific hostname used to expose Red Hat Data Grid when  `expose.type` is set to `Route` |
 | expose.port | string | Defaults to `11222` when `expose.type` is set to `LoadBalancer` | The port number used to expose Red Hat Data Grid when `export.type` is set to `NodePort` or `LoadBalancer` |
