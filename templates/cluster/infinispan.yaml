@@ -58,7 +58,7 @@ spec:
         successThreshold: {{ .successThreshold }}
         timeoutSeconds: {{ .timeoutSeconds }}
   {{- end }}
-  {{- if .Values.customConfig.enabled }}
+  {{- if or .Values.customConfig.enabled .Values.authentication.ldapRealm.enabled }}
   configMapName: {{ .Release.Name }}-datagrid-custom-config
   {{- end }}
   upgrades:
