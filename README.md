@@ -66,11 +66,18 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | availability.enabled | bool | `true` | Enable high availability using anti-affinity. |
 | availability.hostname | bool | `true` | Use `kubernetes.io/hostname` `topologyKey` |
 | availability.zone | bool | `false` | Use `topology.kubernetes.io/zone` `topologyKey` |
-| caches | string | See child keys | Cache configuration for caches |
+| caches | object | See child keys | Cache configuration for caches |
+| caches.distributedCaches[0].asynch | bool | `false` | Clusters can replicate data between nodes using synchronous or asynchronous communication. Synchronous replication provides consistency but can slow down write operations. Asynchronous replication gives better throughput for write operations but can lead to inconsistency and data loss. |
+| caches.distributedCaches[0].encoding | string | `"application/x-protostream"` | The media type that describes data that is stored in the cache. Use `application/x-protostream` encoding for optimal performance and interoperability between client applications. Can be one of application/x-protostream`, `application/x-java-object`, `application/x-java-serialized-object`, `application/xml; charset=UTF-8`, `application/json`, `text/plain`, `application/x-jboss-marshalling` or `application/octet-stream` |
+| caches.distributedCaches[0].segments | int | `256` | Sets the number of hash space segments per cluster. The value should be at least 20 * the cluster size |
+| caches.replicatedCaches[0].asynch | bool | `false` | Clusters can replicate data between nodes using synchronous or asynchronous communication. Synchronous replication provides consistency but can slow down write operations. Asynchronous replication gives better throughput for write operations but can lead to inconsistency and data loss. |
+| caches.replicatedCaches[0].encoding | string | `"application/x-protostream"` | The media type that describes data that is stored in the cache. Use `application/x-protostream` encoding for optimal performance and interoperability between client applications. Can be one of application/x-protostream`, `application/x-java-object`, `application/x-java-serialized-object`, `application/xml; charset=UTF-8`, `application/json`, `text/plain`, `application/x-jboss-marshalling` or `application/octet-stream` |
+| caches.replicatedCaches[0].expiration.maxIdle | string | `"-1ms"` | Specifies the maximum amount of time, in milliseconds, that cache entries can remain idle. If no operations are performed on entries within the maximum idle time, the entries expire across the cluster. A value of 0 or -1 disables expiration. Optionally the following units can be specified: ms (milliseconds), s (seconds), m (minutes), h (hours), d (days). |
+| caches.replicatedCaches[0].segments | int | `256` | Sets the number of hash space segments per cluster. The value should be at least 20 * the cluster size |
 | credentialsStore | object | See child keys | Configuration of a `Secret` used to store sensitive information |
 | credentialsStore.enabled | boolean | `false` | Use a `Secret` to store sensitive information such as credentials |
 | credentialsStore.secretName | string | `nil` | The name of the `Secret` used to store sensitive information |
-| customConfig | object | See child keys | Settings related to the Red Hat Data Grid Operator Cluster |
+| customConfig | object | See child keys | Settings related to the Red Hat Data Grid Operator Cluster configuration |
 | customConfig.config | object | `nil` | The custom Red Hat Data Grid configuration |
 | customConfig.enabled | boolean | `false` | Create a `ConfigMap` with a custom Red Hat Data Grid configuration |
 | encryption | object | See child keys | Control encryption configurations for Red Hat Data Grid |
@@ -84,7 +91,7 @@ A Helm chart for configuring Red Hat Data Grid Instances using the Red Hat Data 
 | expose.port | string | Defaults to `11222` when `expose.type` is set to `LoadBalancer` | The port number used to expose Red Hat Data Grid when `export.type` is set to `NodePort` or `LoadBalancer` |
 | infinispan | object | See child keys | Settings related to the Red Hat Data Grid Operator Cluster |
 | infinispan.disableConfigListener | bool | `false` | Disable the config listener pod. You should do this only if you do not  need declarative Kubernetes representations of Data Grid resources created through the Data Grid Console, CLI, or client applications.    |
-| infinispan.enabled | boolean | `true` | Create a `Subscription` for the Red Hat Data Grid Operator |
+| infinispan.enabled | boolean | `true` | Create an `Infinispan` resource for the Red Hat Data Grid Operator |
 | infinispan.name | string | `"datagrid"` | The name of the Red Hat Data Grid cluster |
 | infinispan.replicas | int | `1` | The number of nodes that will form part of the Red Hat Data Grid cluster |
 | infinispan.upgradeType | string | `"Shutdown"` | Used to control the behavior of Red Hat Data Grid version upgrades. |

@@ -26,7 +26,7 @@ operator:
 # -- Settings related to the Red Hat Data Grid Operator Cluster
 # @default -- See child keys
 infinispan:
-  # -- (boolean) Create a `Subscription` for the Red Hat Data Grid Operator
+  # -- (boolean) Create an `Infinispan` resource for the Red Hat Data Grid Operator
   enabled: true
   # -- The Red Hat Data Grid version to install.  Not to be confused with the
   # Red Hat Data Grid Operator version.
@@ -42,7 +42,7 @@ infinispan:
   # through the Data Grid Console, CLI, or client applications.   
   disableConfigListener: false
 
-# -- Settings related to the Red Hat Data Grid Operator Cluster
+# -- Settings related to the Red Hat Data Grid Operator Cluster configuration
 # @default -- See child keys
 customConfig:
   # -- (boolean) Create a `ConfigMap` with a custom Red Hat Data Grid
@@ -387,3 +387,65 @@ endpoints:
 # -- Cache configuration for caches
 # @default -- See child keys
 caches:
+  replicatedCaches:
+    - name:
+      enabled: false
+      enableStatistics: true
+      useRecreateUpdateStrategy: false
+      enablePersistence: false
+      # -- Clusters can replicate data between nodes using synchronous or
+      # asynchronous communication. Synchronous replication provides consistency
+      # but can slow down write operations. Asynchronous replication gives
+      # better throughput for write operations but can lead to inconsistency and
+      # data loss.
+      asynch: false
+      transactionType:
+      # -- Sets the number of hash space segments per cluster. The value should
+      # be at least 20 * the cluster size
+      segments: 256
+      # -- The media type that describes data that is stored in the cache.
+      # Use `application/x-protostream` encoding for optimal performance and
+      # interoperability between client applications. Can be one of
+      # application/x-protostream`, `application/x-java-object`,
+      #`application/x-java-serialized-object`, `application/xml; charset=UTF-8`,
+      # `application/json`, `text/plain`, `application/x-jboss-marshalling` or
+      # `application/octet-stream`
+      encoding: application/x-protostream
+      expiration:
+        enabled: false
+        lifespan: -1ms
+        # -- Specifies the maximum amount of time, in milliseconds, that cache
+        # entries can remain idle. If no operations are performed on entries
+        # within the maximum idle time, the entries expire across the cluster.
+        # A value of 0 or -1 disables expiration. Optionally the following
+        # units can be specified: ms (milliseconds), s (seconds), m (minutes),
+        # h (hours), d (days).
+        maxIdle: -1ms
+
+  distributedCaches:
+    - name:
+      enabled: false
+      enableStatistics: true
+      useRecreateUpdateStrategy: false
+      enablePersistence: false
+      # -- Clusters can replicate data between nodes using synchronous or
+      # asynchronous communication. Synchronous replication provides consistency
+      # but can slow down write operations. Asynchronous replication gives
+      # better throughput for write operations but can lead to inconsistency and
+      # data loss.
+      asynch: false
+      transactionType: 
+      numOwners: 2
+      l1Lifespan: "5000"
+      l1-cleanup-interval: "60000"
+      # -- Sets the number of hash space segments per cluster. The value should
+      # be at least 20 * the cluster size
+      segments: 256
+      # -- The media type that describes data that is stored in the cache.
+      # Use `application/x-protostream` encoding for optimal performance and
+      # interoperability between client applications. Can be one of
+      # application/x-protostream`, `application/x-java-object`,
+      #`application/x-java-serialized-object`, `application/xml; charset=UTF-8`,
+      # `application/json`, `text/plain`, `application/x-jboss-marshalling` or
+      # `application/octet-stream`
+      encoding: application/x-protostream
